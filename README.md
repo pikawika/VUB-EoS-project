@@ -49,9 +49,9 @@ To make reproducing the project easier, all of the code used is provided.
 
 The code for the project is provided in the form of Jupyter notebooks, which can be run when using the anaconda environment specified in the install instructions available above.
 
-| Title                                | Location                                                     |
-| ------------------------------------ | ------------------------------------------------------------ |
-| Reproducing de Boer's results (2000) | Available [here](code/notebooks/1_reproducing_de_boer_2000.ipynb) |
+| Title                       | Location                                                     |
+| --------------------------- | ------------------------------------------------------------ |
+| Implementing de Boer (2000) | Available [here](code/notebooks/1_implementing_de_boer_2000.ipynb) |
 
 
 * * *
