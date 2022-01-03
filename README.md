@@ -32,9 +32,10 @@ To make reproducing the project easier, the following documentation is provided.
 
 The project was made on a MacBook Pro running macOS Monterey. Install instructions of the environment are available. The code should work in Windows as well.
 
-| Title                          | Documentation                                         |
-| ------------------------------ | ----------------------------------------------------- |
-| Install instructions for macOS | Available [here](documentation/installation/macos.md) |
+| Title                           | Documentation                                          |
+| ------------------------------- | ------------------------------------------------------ |
+| Install instructions for macOS  | Available [here](documentation/installation/macos.md)  |
+| Install instructions for Ubuntu | Available [here](documentation/installation/ubuntu.md) |
 
 
 <hr>

@@ -1,6 +1,6 @@
-# Install instructions for macOS
+# Install instructions for Ubuntu
 
-This project makes use of Python 3 and typical Python packages. We use a Anaconda environment for this. The macOS install instructions are given below. An exported environment is also available.
+This project makes use of Python 3 and typical Python packages. We use a Anaconda environment for this. The Ubuntu install instructions are given below. An exported environment is also available.
 
 ## Table of contents
 
@@ -28,6 +28,8 @@ The instructions below highlight the steps needed to recreate the used anaconda 
 
 - Install [the free version of Anaconda Navigator](https://www.anaconda.com/products/individual).
 
+- Launch the Anaconda Navigator GUI using `anaconda-navigator`.
+
 - From the Anaconda Navigator GUI, create a new environment named `eos-project`.
 
   - Include both Python and R. The following versions were used:
@@ -37,32 +39,32 @@ The instructions below highlight the steps needed to recreate the used anaconda 
 
 - Using your terminal, activate the newly created environment
 
-  - ```shell
-    # Activates the previously created eos-project Anaconda environment.
-    conda activate eos-project
-    ```
+```shell
+# Activates the previously created eos-project Anaconda environment.
+conda activate eos-project
+```
 
 - Install some conda available packages on the environment
 
-  - ```shell
-    # We install matplotlib for plotting purposes
-    conda install matplotlib
-    ```
+```shell
+# We install matplotlib for plotting purposes
+conda install matplotlib
+```
 
 
 
 ### Configuring the environment from the YML file
 
-The anaconda macOS environment is also exported to the `eos-project-environment-mac.yml` YML file. This file is available [here](environments/eos-project-environment-mac.yml). You can load it in via the terminal as follows:
+The anaconda Ubuntu environment is also exported to the `eos-project-environment-ubuntu.yml` YML file. This file is available [here](environments/eos-project-environment-ubuntu.yml). You can load it in via the terminal as follows:
 
 
 ```shell
 # Navigate to the folder where the YML file is located
 cd eos/documentation/installation/environments
 # Configure a new environment from the YML file
-conda env create -f eos-project-environment-mac.yml
+conda env create -f eos-project-environment-ubuntu.yml
 # The export was done using
-#   conda env export --no-build > eos-project-environment-mac.yml
+#   conda env export --no-build > eos-project-environment-ubuntu.yml
 ```
 
 * * *
