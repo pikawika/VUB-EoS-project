@@ -380,6 +380,9 @@ class Agent:
         for current_sound in self.known_sounds:
             for compare_sound in self.known_sounds:
                 distance = self.bark_operator.distance_between_utterances(current_sound.utterance, compare_sound.utterance);
+                if distance == 0:
+                    # Skip equal sounds
+                    continue;
                 energy += 1 / (distance ** 2);
 
         return energy;
@@ -957,7 +960,6 @@ class Statistics:
         # Init vars
         f1 = [];
         f2 = [];
-        bark_operator = game_state.agents[0].bark_operator;
         
         # Plot the utterances of the agents
         for agent in game_state.agents:
@@ -994,8 +996,8 @@ class Statistics:
             phoneme = Phoneme(argument_sets[i][0], argument_sets[i][1], argument_sets[i][2]);    
             utterance = synthesizer.synthesise(phoneme);
             vowel = vowels[i];
-            f1 = bark_operator.bark_f1(utterance);
-            f2 = bark_operator.bark_f2(utterance);
+            f1 = self.bark_operator.bark_f1(utterance);
+            f2 = self.bark_operator.bark_f2(utterance);
             plt.text(f2, f1, vowel, color='red', fontsize=18, ha='center', va='center')
 
 
