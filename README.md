@@ -11,6 +11,7 @@ This repository includes installation instructions, source code, extra documents
   - [Installation instructions](#installation-instructions)
 - [Code](#code)
   - [Jupyter notebooks](#jupyter-notebooks)
+  - [HTML exported notebooks](#html-exported-notebooks)
   - [Python files](#python-files)
 
 <hr>
@@ -29,6 +30,8 @@ This repository includes installation instructions, source code, extra documents
 
 To make reproducing the project easier, the following documentation is provided.
 
+
+
 ### Installation instructions
 
 The project was made on a MacBook Pro running macOS Monterey. Install instructions of the environment are available. The code should work in Windows as well.
@@ -37,6 +40,8 @@ The project was made on a MacBook Pro running macOS Monterey. Install instructio
 | ------------------------------- | ------------------------------------------------------ |
 | Install instructions for macOS  | Available [here](documentation/installation/macos.md)  |
 | Install instructions for Ubuntu | Available [here](documentation/installation/ubuntu.md) |
+
+
 
 ### Sample output
 
@@ -59,18 +64,30 @@ To make reproducing the project easier, all of the code used is provided.
 
 The code for the project is provided in the form of Jupyter notebooks, which can be run when using the anaconda environment specified in the install instructions available above.
 
-| Title                       | Location                                                 |
-| --------------------------- | -------------------------------------------------------- |
-| Implementing de Boer (2000) | Available [here](code/1_implementing_de_boer_2000.ipynb) |
-| Reacreating de Boer (2000)  | Available [here](code/2_recreating_de_boer_2000.ipynb)   |
+| Title                       | Location                                                     |
+| --------------------------- | ------------------------------------------------------------ |
+| Implementing de Boer (2000) | Available [here](code/notebooks/1_implementing_de_boer_2000.ipynb) |
+| Reacreating de Boer (2000)  | Available [here](code/notebooks/2_recreating_de_boer_2000.ipynb) |
+
+
+
+### HTML exported notebooks
+
+To view the notebooks without a conda environment a HTML export is provided which can be viewed with any regular web browser.
+
+| Title                       | Location                                                     |
+| --------------------------- | ------------------------------------------------------------ |
+| Implementing de Boer (2000) | Available [here](code/html-exports/1_implementing_de_boer_2000.html) |
+
+
 
 ### Python files
 
 We also provide some plain python files to easily import previously created functions and/or classes
 
-| Title                                 | Location                                       |
-| ------------------------------------- | ---------------------------------------------- |
-| Classes needed to play imitation game | Available [here](code/imitationGameClasses.py) |
+| Title                                 | Location                                                 |
+| ------------------------------------- | -------------------------------------------------------- |
+| Classes needed to play imitation game | Available [here](code/notebooks/imitationGameClasses.py) |
 
 
 * * *

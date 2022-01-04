@@ -19,6 +19,7 @@ import numpy as np
 
 # Easier iterations
 import itertools
+from collections import Counter
 
 # Deep copy lists
 import copy
@@ -305,6 +306,7 @@ class Agent:
 
         # Init game count variables
         self.games_count = 0;
+        self.success_count = 0;
         self.speaker_count = 0;
         self.imitator_count = 0;
 
@@ -338,7 +340,7 @@ class Agent:
         
         
         
-    def prepare_for_new_game(self, was_imitator):
+    def prepare_for_new_game(self, was_imitator: bool, was_succes: bool):
         """Performs actions to be taken on end of game, preparing for next game."""
         # Reset last spoken and heard parameters
         self.last_spoken_sound = None;
@@ -346,6 +348,9 @@ class Agent:
         
         # Register played game
         self.games_count += 1;
+
+        if was_succes:
+            self.success_count += 1;
 
         if was_imitator:
             self.imitator_count += 1;
@@ -363,6 +368,21 @@ class Agent:
         # Periodically add new sounds
         if (rnd.uniform(0, 1) < self.new_sound_prob):
             self.add_semi_random_known_sound();
+
+    def success_ratio(self):
+        """Returns the success ratio of the agent in games."""
+        return self.success_count / self.games_count;
+
+    def energy(self):
+        """Returns the energy the agent's sound repetoire according to its bark operator."""
+        energy = 0;
+
+        for current_sound in self.known_sounds:
+            for compare_sound in self.known_sounds:
+                distance = self.bark_operator.distance_between_utterances(current_sound.utterance, compare_sound.utterance);
+                energy += 1 / (distance ** 2);
+
+        return energy;
 
     def remove_bad_sounds(self):
         """Cleans up an agent by removing sounds under threshold."""
@@ -619,7 +639,7 @@ class Agent:
                 print(self.name + ": rejected match with  " + closest_sound.utterance.string());
                 
         # End of current game
-        self.prepare_for_new_game(was_imitator=False);
+        self.prepare_for_new_game(was_imitator=False, was_succes= good_imitation);
         
         return good_imitation;
     
@@ -646,7 +666,7 @@ class Agent:
                 print(self.name + ": had a confirmed match, changed my sound to match closer.");
                 
         # End of current game
-        self.prepare_for_new_game(was_imitator=True);
+        self.prepare_for_new_game(was_imitator=True, was_succes= was_success);
         
 
 ############################################################################################
@@ -771,3 +791,208 @@ class GameEngine:
 
         # Return the game states
         return game_states;
+
+
+############################################################################################
+# Statistics
+############################################################################################
+
+class Statistics:
+    """This is a class used to calculate and plot some of the experiment statistics."""
+    def __init__(self, bark_operator: BarkOperator):
+        self.bark_operator = bark_operator;
+
+    def sound_sizes_from_agents(self, game_states: list):
+        """Returns the vowel sizes of agents for the provided list of gamestates."""
+        sound_sizes = [];
+        for game_state in game_states:
+            sound_sizes += [len(agent.known_sounds) for agent in game_state.agents];
+
+        return sound_sizes;
+
+    def average_agent_sound_size(self, game_states: list):
+        """Returns the average agent vowel size together with the standard deviation [avg, std] for the provided list of gamestates."""
+        # Go to np array from sound sizes
+        sound_sizes = self.sound_sizes_from_agents(game_states);
+        sound_sizes = np.array(sound_sizes);
+
+        # return mean and std
+        return [sound_sizes.mean(), sound_sizes.std()];
+
+    def plot_agent_sound_size_distribution(self, game_states: list, right_limit: int = 10):
+        """Plots a histogram of the agent's vowel sizes for the provided list of gamestates."""
+        sound_sizes = self.sound_sizes_from_agents(game_states);
+
+        n_bins = len(Counter(sound_sizes).keys());
+
+        # Change plot size and color, then start new plot 
+        plt.rcParams["figure.figsize"] = (10,10);
+        plt.rcParams['figure.facecolor'] = 'white';
+        plt.figure();
+
+        # Make histogram
+        plt.hist(sound_sizes, bins=n_bins);
+        
+        # Set titles
+        plt.title("Distribution for known sounds of agents");
+        plt.xlabel("Repetoire size");
+        plt.ylabel("Agent count");
+
+        # Set Xlim
+        plt.xlim(0, right_limit);
+
+        # Reset figure size for next figures
+        plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
+        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
+
+    def success_ratios_from_agents(self, game_states: list):
+        """Returns the success ratios of agents in the given game states."""
+        success_ratios = [];
+        for game_state in game_states:
+            success_ratios += [agent.success_ratio() for agent in game_state.agents];
+
+        return success_ratios;
+
+    def average_agent_success_ratio(self, game_states: list):
+        """Returns the average agent sucess ratio together with the standard deviation [avg, std] for the provided list of gamestates."""
+        # Go to np array from sound sizes
+        success_ratios = self.success_ratios_from_agents(game_states);
+        success_ratios = np.array(success_ratios);
+
+        # return mean and std
+        return [success_ratios.mean(), success_ratios.std()];
+
+    def plot_agent_success_ratio_distribution(self, game_states: list, left_limit: float = 0.8, n_bins: int = 10):
+        """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
+        success_ratios = self.success_ratios_from_agents(game_states);
+
+        if len(Counter(success_ratios).keys()) < 10:
+            n_bins = len(Counter(success_ratios).keys());
+
+        # Change plot size and color, then start new plot 
+        plt.rcParams["figure.figsize"] = (10,10);
+        plt.rcParams['figure.facecolor'] = 'white';
+        plt.figure();
+
+        # Make histogram
+        plt.hist(success_ratios, bins=n_bins);
+        
+        # Set titles
+        plt.title("Distribution for success ratio of agents");
+        plt.xlabel("Success ratio");
+        plt.ylabel("Agent count");
+
+        # Set Xlim
+        plt.xlim(left_limit, 1);
+
+        # Reset figure size for next figures
+        plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
+        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
+
+    def energy_from_agents(self, game_states: list):
+        """Returns the energy of agents in the given game states."""
+        energies = [];
+        for game_state in game_states:
+            energies += [agent.energy() for agent in game_state.agents];
+
+        return energies;
+
+    def average_agent_energy(self, game_states: list):
+        """Returns the average agent energy together with the standard deviation [avg, std] for the provided list of gamestates."""
+        # Go to np array from sound sizes
+        energies = self.energy_from_agents(game_states);
+        energies = np.array(energies);
+
+        # return mean and std
+        return [energies.mean(), energies.std()];
+
+    def plot_agent_energy_distribution(self, game_states: list, n_bins: int = 10):
+        """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
+        energies = self.energy_from_agents(game_states);
+
+        if len(Counter(energies).keys()) < 10:
+            n_bins = len(Counter(energies).keys());
+
+        # Change plot size and color, then start new plot 
+        plt.rcParams["figure.figsize"] = (10,10);
+        plt.rcParams['figure.facecolor'] = 'white';
+        plt.figure();
+
+        # Make histogram
+        plt.hist(energies, bins=n_bins);
+        
+        # Set titles
+        plt.title("Distribution for energy of agents");
+        plt.xlabel("Energy");
+        plt.ylabel("Agent count");
+
+        # Reset figure size for next figures
+        plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
+        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
+
+    def plot_known_vowels_over_sounds(self, game_state: GameState):
+        # Change plot size and color, then start new plot 
+        plt.rcParams["figure.figsize"] = (10,10);
+        plt.rcParams['figure.facecolor'] = 'white';
+        plt.figure();
+        
+        # Init vars
+        f1 = [];
+        f2 = [];
+        bark_operator = self.bark_operator;
+        
+        # Plot the utterances of the agents
+        for agent in game_state.agents:
+            f1 += [agent.bark_operator.bark_f1(sound.utterance) for sound in agent.known_sounds];
+            f2 += [agent.bark_operator.bark_f2(sound.utterance) for sound in agent.known_sounds];
+        
+        plt.plot(f2, f1, 'bo', alpha=0.4, label="Agent sound");
+
+        # Plot the known vowels
+        argument_sets = [[0, 0, 0],
+                    [0, 0, 1],
+                    [0.5, 0, 0],
+                    [0.5, 0, 1],
+                    [1, 0, 0],
+                    [1, 0, 1],
+                    [0, 0.5, 0],
+                    [0, 0.5, 1],
+                    [0.5, 0.5, 0],
+                    [0.5, 0.5, 1],
+                    [1, 0.5, 0],
+                    [1, 0.5, 1],
+                    [0, 1, 0],
+                    [0, 1, 1],
+                    [0.5, 1, 0],
+                    [0.5, 1, 1],
+                    [1, 1, 0],
+                    [1, 1, 1]];
+
+        vowels = ["[a]", "[œ]", "[ɐ]", "[ɐ̹]", "[ɑ]", "[ɒ]", "[e]", "[ø]", "[ə]", "[e]", "[ɤ]", "[o]", "[i]", "[y]", "[ɨ]", "[ʉ]", "[ɯ]", "[u]"];
+
+        synthesizer = Synthesizer(max_noise_ambient = 0);
+
+        for i in range(0, len(argument_sets)):
+            phoneme = Phoneme(argument_sets[i][0], argument_sets[i][1], argument_sets[i][2]);    
+            utterance = synthesizer.synthesise(phoneme);
+            vowel = vowels[i];
+            f1 = bark_operator.bark_f1(utterance);
+            f2 = bark_operator.bark_f2(utterance);
+            plt.text(f2, f1, vowel, color='red', fontsize=18, ha='center', va='center')
+
+
+        # Set titles
+        plt.title("Known vowels compared to sounds of agents");
+        plt.xlabel("F'2 in bark");
+        plt.ylabel("F1 in bark");
+        
+        # Change pot parameters
+        plt.ylim(1, 8);
+        plt.xlim(7, 16);
+        plt.gca().invert_xaxis();
+        plt.gca().invert_yaxis();
+        plt.grid();
+
+        # Reset figure size for next figures
+        plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
+        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
