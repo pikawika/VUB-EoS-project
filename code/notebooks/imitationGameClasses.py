@@ -802,28 +802,34 @@ class Statistics:
     def __init__(self, bark_operator: BarkOperator):
         self.bark_operator = bark_operator;
 
-    def sound_sizes_from_agents(self, game_states: list):
-        """Returns the vowel sizes of agents for the provided list of gamestates."""
-        sound_sizes = [];
-        for game_state in game_states:
-            sound_sizes += [len(agent.known_sounds) for agent in game_state.agents];
+    def sound_sizes_from_game_state(self, game_state: GameState):
+        """Returns the vowel sizes of agents for the provided gamestate."""
+        sound_sizes = [len(agent.known_sounds) for agent in game_state.agents];
 
         return sound_sizes;
 
     def average_agent_sound_size(self, game_states: list):
-        """Returns the average agent vowel size together with the standard deviation [avg, std] for the provided list of gamestates."""
+        """Returns the average agent vowel size together with the standard deviation [avg, std] for the provided list of gamestates.
+        Does this one a Game State per Game State basis."""
+        average_sound_sizes = [];
+        
+        for game_state in game_states:
+            average_sound_sizes += [np.array(self.sound_sizes_from_game_state(game_state)).mean()];
+
         # Go to np array from sound sizes
-        sound_sizes = self.sound_sizes_from_agents(game_states);
-        sound_sizes = np.array(sound_sizes);
+        average_sound_sizes = np.array(average_sound_sizes);
 
         # return mean and std
-        return [sound_sizes.mean(), sound_sizes.std()];
+        return [average_sound_sizes.mean(), average_sound_sizes.std()];
 
     def plot_agent_sound_size_distribution(self, game_states: list, right_limit: int = 10):
         """Plots a histogram of the agent's vowel sizes for the provided list of gamestates."""
-        sound_sizes = self.sound_sizes_from_agents(game_states);
+        average_sound_sizes = [];
+        
+        for game_state in game_states:
+            average_sound_sizes += [np.array(self.sound_sizes_from_game_state(game_state)).mean()];
 
-        n_bins = len(Counter(sound_sizes).keys());
+        n_bins = len(Counter(average_sound_sizes).keys());
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -831,7 +837,7 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(sound_sizes, bins=n_bins);
+        plt.hist(average_sound_sizes);
         
         # Set titles
         plt.title("Distribution for known sounds of agents");
@@ -843,31 +849,37 @@ class Statistics:
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
-        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
+        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"]; 
 
-    def success_ratios_from_agents(self, game_states: list):
-        """Returns the success ratios of agents in the given game states."""
-        success_ratios = [];
-        for game_state in game_states:
-            success_ratios += [agent.success_ratio() for agent in game_state.agents];
+    def success_ratios_from_agents(self, game_state: GameState):
+        """Returns the vowel sizes of agents for the provided gamestate."""
+        success_ratios = [agent.success_ratio() for agent in game_state.agents];
 
         return success_ratios;
 
     def average_agent_success_ratio(self, game_states: list):
-        """Returns the average agent sucess ratio together with the standard deviation [avg, std] for the provided list of gamestates."""
+        """Returns the average agent success ratio together with the standard deviation [avg, std] for the provided list of gamestates.
+        Does this one a Game State per Game State basis."""
+        average_success_ratios = [];
+        
+        for game_state in game_states:
+            average_success_ratios += [np.array(self.success_ratios_from_agents(game_state)).mean()];
+
         # Go to np array from sound sizes
-        success_ratios = self.success_ratios_from_agents(game_states);
-        success_ratios = np.array(success_ratios);
+        average_success_ratios = np.array(average_success_ratios);
 
         # return mean and std
-        return [success_ratios.mean(), success_ratios.std()];
+        return [average_success_ratios.mean(), average_success_ratios.std()];
 
     def plot_agent_success_ratio_distribution(self, game_states: list, left_limit: float = 0.8, n_bins: int = 10):
         """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
-        success_ratios = self.success_ratios_from_agents(game_states);
+        average_success_ratios = [];
+        
+        for game_state in game_states:
+            average_success_ratios += [np.array(self.success_ratios_from_agents(game_state)).mean()];
 
-        if len(Counter(success_ratios).keys()) < 10:
-            n_bins = len(Counter(success_ratios).keys());
+        if len(Counter(average_success_ratios).keys()) < 10:
+            n_bins = len(Counter(average_success_ratios).keys());
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -875,7 +887,7 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(success_ratios, bins=n_bins);
+        plt.hist(average_success_ratios, bins=n_bins);
         
         # Set titles
         plt.title("Distribution for success ratio of agents");
@@ -889,29 +901,35 @@ class Statistics:
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
         plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
 
-    def energy_from_agents(self, game_states: list):
+    def energy_from_agents(self, game_state: GameState):
         """Returns the energy of agents in the given game states."""
-        energies = [];
-        for game_state in game_states:
-            energies += [agent.energy() for agent in game_state.agents];
+        energies = [agent.energy() for agent in game_state.agents];
 
         return energies;
 
     def average_agent_energy(self, game_states: list):
-        """Returns the average agent energy together with the standard deviation [avg, std] for the provided list of gamestates."""
+        """Returns the average agent energy together with the standard deviation [avg, std] for the provided list of gamestates.
+        Does this one a Game State per Game State basis."""
+        average_energies = [];
+            
+        for game_state in game_states:
+            average_energies += [np.array(self.energy_from_agents(game_state)).mean()];
+        
         # Go to np array from sound sizes
-        energies = self.energy_from_agents(game_states);
-        energies = np.array(energies);
+        average_energies = np.array(average_energies);
 
         # return mean and std
-        return [energies.mean(), energies.std()];
+        return [average_energies.mean(), average_energies.std()];
 
     def plot_agent_energy_distribution(self, game_states: list, n_bins: int = 10):
         """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
-        energies = self.energy_from_agents(game_states);
+        average_energies = [];
+            
+        for game_state in game_states:
+            average_energies += [np.array(self.energy_from_agents(game_state)).mean()];
 
-        if len(Counter(energies).keys()) < 10:
-            n_bins = len(Counter(energies).keys());
+        if len(Counter(average_energies).keys()) < 10:
+            n_bins = len(Counter(average_energies).keys());
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -919,7 +937,7 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(energies, bins=n_bins);
+        plt.hist(average_energies, bins=n_bins);
         
         # Set titles
         plt.title("Distribution for energy of agents");
@@ -939,7 +957,7 @@ class Statistics:
         # Init vars
         f1 = [];
         f2 = [];
-        bark_operator = self.bark_operator;
+        bark_operator = game_state.agents[0].bark_operator;
         
         # Plot the utterances of the agents
         for agent in game_state.agents:
