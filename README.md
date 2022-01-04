@@ -42,10 +42,10 @@ The project was made on a MacBook Pro running macOS Monterey. Install instructio
 
 Sample output in the form of figures created by the code are also provided here. These are the figures also used in the report.
 
-| Title                                            | Documentation                                           |
-| ------------------------------------------------ | ------------------------------------------------------- |
-| Figures for implementing de Boer (2000) notebook | Available [here](code-ouput/1-implemeting_de_boer/)     |
-| Figures for recreating de Boer (2000) notebook   | Available [here](code-ouput/2-recreating_de_boer_2000/) |
+| Title                                            | Documentation                                            |
+| ------------------------------------------------ | -------------------------------------------------------- |
+| Figures for implementing de Boer (2000) notebook | Available [here](code-output/1-implemeting_de_boer/)     |
+| Figures for recreating de Boer (2000) notebook   | Available [here](code-output/2-recreating_de_boer_2000/) |
 
 
 <hr>
