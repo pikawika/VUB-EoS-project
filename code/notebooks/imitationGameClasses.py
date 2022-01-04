@@ -825,14 +825,15 @@ class Statistics:
         # return mean and std
         return [average_sound_sizes.mean(), average_sound_sizes.std()];
 
-    def plot_agent_sound_size_distribution(self, game_states: list, right_limit: int = 10):
+    def plot_agent_sound_size_distribution(self, game_states: list, left_limit: int = 3, right_limit: int = 9, n_bins = None, rwidth = 0.9):
         """Plots a histogram of the agent's vowel sizes for the provided list of gamestates."""
         average_sound_sizes = [];
         
         for game_state in game_states:
             average_sound_sizes += [np.array(self.sound_sizes_from_game_state(game_state)).mean()];
 
-        n_bins = len(Counter(average_sound_sizes).keys());
+        if n_bins == None:
+            n_bins = len(Counter(average_sound_sizes).keys());
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -840,15 +841,16 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(average_sound_sizes);
+        plt.hist(average_sound_sizes, bins = n_bins, rwidth= rwidth);
         
         # Set titles
-        plt.title("Distribution for known sounds of agents");
+        plt.title(f"Distribution for known sounds of agents ({round(min(average_sound_sizes), 2)} - {round(max(average_sound_sizes), 2)})");
         plt.xlabel("Repetoire size");
         plt.ylabel("Agent count");
 
         # Set Xlim
-        plt.xlim(0, right_limit);
+        plt.xticks(np.arange(0, 10, 1));
+        plt.xlim(left_limit, right_limit);
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
@@ -874,7 +876,7 @@ class Statistics:
         # return mean and std
         return [average_success_ratios.mean(), average_success_ratios.std()];
 
-    def plot_agent_success_ratio_distribution(self, game_states: list, left_limit: float = 0.8, n_bins: int = 10):
+    def plot_agent_success_ratio_distribution(self, game_states: list, left_limit: int = 0, right_limit: int = 1, n_bins: int = 10, rwidth = 0.9):
         """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
         average_success_ratios = [];
         
@@ -890,15 +892,15 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(average_success_ratios, bins=n_bins);
+        plt.hist(average_success_ratios, bins=n_bins, rwidth= rwidth);
         
         # Set titles
-        plt.title("Distribution for success ratio of agents");
+        plt.title(f"Distribution for success ratio of agents ({round(min(average_success_ratios), 2)} - {round(max(average_success_ratios), 2)})");
         plt.xlabel("Success ratio");
         plt.ylabel("Agent count");
 
         # Set Xlim
-        plt.xlim(left_limit, 1);
+        plt.xlim(left_limit, right_limit);
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
@@ -924,7 +926,7 @@ class Statistics:
         # return mean and std
         return [average_energies.mean(), average_energies.std()];
 
-    def plot_agent_energy_distribution(self, game_states: list, n_bins: int = 10):
+    def plot_agent_energy_distribution(self, game_states: list, n_bins: int = 10, left_limit: int = 1, right_limit: int = 15, rwidth = 0.9):
         """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
         average_energies = [];
             
@@ -940,12 +942,15 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(average_energies, bins=n_bins);
+        plt.hist(average_energies, bins=n_bins, rwidth= rwidth);
         
         # Set titles
-        plt.title("Distribution for energy of agents");
+        plt.title(f"Distribution for energy of agents ({round(min(average_energies), 2)} - {round(max(average_energies), 2)})");
         plt.xlabel("Energy");
         plt.ylabel("Agent count");
+        
+        # Limit
+        plt.xlim(left_limit, right_limit);
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
