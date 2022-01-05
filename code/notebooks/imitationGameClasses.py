@@ -685,7 +685,7 @@ class GameState:
         self.agents = copy.deepcopy(agents);
         self.iteration = iteration;
 
-    def plot(self, title: str = None):
+    def plot(self, title: str = None, show_legend: bool = True):
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
         plt.rcParams['figure.facecolor'] = 'white';
@@ -713,7 +713,8 @@ class GameState:
         plt.grid();
 
         # Show legend
-        plt.legend(title="Agent names", loc="lower left");
+        if show_legend:
+            plt.legend(title="Agent names", loc="lower left");
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
