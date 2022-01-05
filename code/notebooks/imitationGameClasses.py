@@ -713,7 +713,7 @@ class GameState:
         plt.grid();
 
         # Show legend
-        plt.legend(title="Agent names");
+        plt.legend(title="Agent names", loc="lower left");
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
