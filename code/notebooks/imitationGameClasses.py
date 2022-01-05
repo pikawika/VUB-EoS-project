@@ -295,7 +295,7 @@ class Agent:
                     logger: bool = False,
                     phoneme_step_size: float = 0.1, max_similar_sound_loops: int = 20, max_semi_random_loop: int = 5,
                     sound_threshold_game: float = 0.5, sound_threshold_agent:float = 0.7, sound_minimum_tries: int = 5,
-                    cleanup_prob = 0.1, new_sound_prob = 0.01, merge_prob = 1, merge_distance = 0.6):
+                    cleanup_prob = 0.1, new_sound_prob = 0.01, merge_prob = 1):
         """Creates an instance of a Agent.
         Default settings are those from de Boer."""
         # --------- Variables to be set according to init
@@ -335,7 +335,6 @@ class Agent:
         self.cleanup_prob = cleanup_prob;
         self.new_sound_prob = new_sound_prob;
         self.merge_prob = merge_prob;
-        self.merge_distance = merge_distance;
         
         
         
@@ -610,6 +609,9 @@ class Agent:
         # Find closest sound
         closest_sound = self.find_similar_sound(heard_utterance);
         
+        # Produce an utterance from the chosen sound
+        utterance = self.synthesizer.synthesise(closest_sound.phoneme);
+        
         # Register use
         self.last_spoken_sound = self.known_sounds.index(closest_sound);
         closest_sound.was_used();
@@ -619,7 +621,7 @@ class Agent:
         
         
         # Return the utterance
-        return closest_sound.utterance;
+        return utterance;
     
     def validate_imitation(self, heard_utterance: Utterance):
         """Returns true if imitation is correct according to agent, ending the game cycle."""
@@ -793,6 +795,10 @@ class GameEngine:
 
             # After playing the game, check if checkpoint reached for storing
             if i + 1 in checkpoints:
+                # Force merge of agent for Energy measure
+                for agent in self.agents:
+                    agent.merge_similar_sound();
+                    
                 # Store imitation game state
                 game_states[checkpoints.index(i + 1)] = GameState(self.agents, i + 1);
 
