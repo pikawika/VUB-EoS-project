@@ -825,7 +825,7 @@ class Statistics:
         # return mean and std
         return [average_sound_sizes.mean(), average_sound_sizes.std()];
 
-    def plot_agent_sound_size_distribution(self, game_states: list, left_limit: int = 3, right_limit: int = 9, n_bins = None, rwidth = 0.9):
+    def plot_agent_sound_size_distribution(self, game_states: list, left_limit: int = 3, right_limit: int = 9, n_bins = None, rwidth = 0.9, show_grid: bool = True):
         """Plots a histogram of the agent's vowel sizes for the provided list of gamestates."""
         average_sound_sizes = [];
         
@@ -833,7 +833,8 @@ class Statistics:
             average_sound_sizes += [np.array(self.sound_sizes_from_game_state(game_state)).mean()];
 
         if n_bins == None:
-            n_bins = len(Counter(average_sound_sizes).keys());
+            # 4 bins per step of size 1 (as used by de Boer)
+            n_bins=list(np.linspace(left_limit, right_limit, (right_limit-left_limit)*4 + 1));
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -844,17 +845,21 @@ class Statistics:
         plt.hist(average_sound_sizes, bins = n_bins, rwidth= rwidth);
         
         # Set titles
-        plt.title(f"Distribution for known sounds of agents ({round(min(average_sound_sizes), 2)} - {round(max(average_sound_sizes), 2)})");
+        plt.title(f"Distribution for known sounds repetoire size of agents ({round(min(average_sound_sizes), 2)} - {round(max(average_sound_sizes), 2)})");
         plt.xlabel("Repetoire size");
-        plt.ylabel("Agent count");
+        plt.ylabel("Game count");
 
         # Set Xlim
-        plt.xticks(np.arange(0, 10, 1));
+        plt.xticks(np.arange(left_limit, right_limit + 1, 1));
         plt.xlim(left_limit, right_limit);
+
+        # Show grid
+        if show_grid:
+            plt.grid(axis="y", alpha=0.5);
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
-        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"]; 
+        plt.rcParams["figure.facecolor"] = plt.rcParamsDefault["figure.facecolor"];
 
     def success_ratios_from_agents(self, game_state: GameState):
         """Returns the vowel sizes of agents for the provided gamestate."""
@@ -876,15 +881,16 @@ class Statistics:
         # return mean and std
         return [average_success_ratios.mean(), average_success_ratios.std()];
 
-    def plot_agent_success_ratio_distribution(self, game_states: list, left_limit: int = 0, right_limit: int = 1, n_bins: int = 10, rwidth = 0.9):
-        """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
+    def plot_agent_success_ratio_distribution(self, game_states: list, left_limit: float = 0.8, right_limit: float = 1, n_bins = None, rwidth = 0.9, show_grid: bool = True):
+        """Plots a histogram of the agent's success ratio for the provided list of gamestates."""
         average_success_ratios = [];
         
         for game_state in game_states:
             average_success_ratios += [np.array(self.success_ratios_from_agents(game_state)).mean()];
 
-        if len(Counter(average_success_ratios).keys()) < 10:
-            n_bins = len(Counter(average_success_ratios).keys());
+        if n_bins == None:
+            # A bin every 2%
+            list(np.arange(left_limit, right_limit + 0.02, 0.02))
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -892,15 +898,20 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(average_success_ratios, bins=n_bins, rwidth= rwidth);
+        plt.hist(average_success_ratios, bins = n_bins, rwidth= rwidth);
         
         # Set titles
-        plt.title(f"Distribution for success ratio of agents ({round(min(average_success_ratios), 2)} - {round(max(average_success_ratios), 2)})");
+        plt.title(f"Distribution for success ratio's of agents averaged over game ({round(min(average_success_ratios), 2)} - {round(max(average_success_ratios), 2)})");
         plt.xlabel("Success ratio");
-        plt.ylabel("Agent count");
+        plt.ylabel("Game count");
 
         # Set Xlim
+        plt.xticks(list(np.around(np.arange(0, 1 + 0.03, 0.03), 2)));
         plt.xlim(left_limit, right_limit);
+
+        # Show grid
+        if show_grid:
+            plt.grid(axis="y", alpha=0.5);
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
@@ -926,15 +937,16 @@ class Statistics:
         # return mean and std
         return [average_energies.mean(), average_energies.std()];
 
-    def plot_agent_energy_distribution(self, game_states: list, n_bins: int = 10, left_limit: int = 1, right_limit: int = 15, rwidth = 0.9):
-        """Plots a histogram of the agent's success ratios for the provided list of gamestates."""
+    def plot_agent_energy_distribution(self, game_states: list, left_limit: float = 1, right_limit: float = 15, n_bins = None, rwidth = 0.9, show_grid: bool = True):
+        """Plots a histogram of the agent's success ratio for the provided list of gamestates."""
         average_energies = [];
-            
+        
         for game_state in game_states:
             average_energies += [np.array(self.energy_from_agents(game_state)).mean()];
 
-        if len(Counter(average_energies).keys()) < 10:
-            n_bins = len(Counter(average_energies).keys());
+        if n_bins == None:
+            # A bin every 0.5
+            n_bins = list(np.arange(left_limit, right_limit + 0.5, 0.5))
 
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
@@ -942,15 +954,20 @@ class Statistics:
         plt.figure();
 
         # Make histogram
-        plt.hist(average_energies, bins=n_bins, rwidth= rwidth);
+        plt.hist(average_energies, bins = n_bins, rwidth= rwidth);
         
         # Set titles
-        plt.title(f"Distribution for energy of agents ({round(min(average_energies), 2)} - {round(max(average_energies), 2)})");
+        plt.title(f"Distribution for energy of agents averaged over game ({round(min(average_energies), 2)} - {round(max(average_energies), 2)})");
         plt.xlabel("Energy");
-        plt.ylabel("Agent count");
-        
-        # Limit
+        plt.ylabel("Game count");
+
+        # Set Xlim
+        plt.xticks(list(np.arange(left_limit, right_limit + 2, 2)));
         plt.xlim(left_limit, right_limit);
+
+        # Show grid
+        if show_grid:
+            plt.grid(axis="y", alpha=0.5);
 
         # Reset figure size for next figures
         plt.rcParams["figure.figsize"] = plt.rcParamsDefault["figure.figsize"];
