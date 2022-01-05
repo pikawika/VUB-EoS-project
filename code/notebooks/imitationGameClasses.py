@@ -685,7 +685,7 @@ class GameState:
         self.agents = copy.deepcopy(agents);
         self.iteration = iteration;
 
-    def plot(self):
+    def plot(self, title: str = None):
         # Change plot size and color, then start new plot 
         plt.rcParams["figure.figsize"] = (10,10);
         plt.rcParams['figure.facecolor'] = 'white';
@@ -698,7 +698,10 @@ class GameState:
             plt.plot(f2, f1, 'o', label=agent.name);
 
         # Set titles
-        plt.title(str(self.iteration) + " games");
+        if title == None:
+            plt.title(str(self.iteration) + " games");
+        else:
+            plt.title(title);
         plt.xlabel("F'2 in bark");
         plt.ylabel("F1 in bark");
         
