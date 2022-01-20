@@ -47,10 +47,11 @@ The project was made on a MacBook Pro running macOS Monterey. Install instructio
 
 Sample output in the form of figures created by the code are also provided here. These are the figures also used in the report.
 
-| Title                                            | Documentation                                            |
-| ------------------------------------------------ | -------------------------------------------------------- |
-| Figures for implementing de Boer (2000) notebook | Available [here](code-output/1-implemeting_de_boer/)     |
-| Figures for recreating de Boer (2000) notebook   | Available [here](code-output/2-recreating_de_boer_2000/) |
+| Title                                                    | Documentation                                                |
+| :------------------------------------------------------- | ------------------------------------------------------------ |
+| Figures for implementing de Boer (2000) notebook         | Available [here](code-output/1-implemeting_de_boer/)         |
+| Figures for recreating de Boer (2000) notebook           | Available [here](code-output/2-recreating_de_boer_2000/)     |
+| Recreating de Boer with alternative Bark Operator (2000) | Available [here](code-output/3-alternative_bark_experiments/) |
 
 
 <hr>
@@ -64,10 +65,11 @@ To make reproducing the project easier, all of the code used is provided.
 
 The code for the project is provided in the form of Jupyter notebooks, which can be run when using the anaconda environment specified in the install instructions available above.
 
-| Title                       | Location                                                     |
-| --------------------------- | ------------------------------------------------------------ |
-| Implementing de Boer (2000) | Available [here](code/notebooks/1_implementing_de_boer_2000.ipynb) |
-| Reacreating de Boer (2000)  | Available [here](code/notebooks/2_recreating_de_boer_2000.ipynb) |
+| Title                                                    | Location                                                     |
+| -------------------------------------------------------- | ------------------------------------------------------------ |
+| Implementing de Boer (2000)                              | Available [here](code/notebooks/1_implementing_de_boer_2000.ipynb) |
+| Reacreating de Boer (2000)                               | Available [here](code/notebooks/2_recreating_de_boer_2000.ipynb) |
+| Recreating de Boer with alternative Bark Operator (2000) | Available [here](code/notebooks/3_alternative_bark_experiments.ipynb) |
 
 
 
@@ -75,9 +77,11 @@ The code for the project is provided in the form of Jupyter notebooks, which can
 
 To view the notebooks without a conda environment a HTML export is provided which can be viewed with any regular web browser.
 
-| Title                       | Location                                                     |
-| --------------------------- | ------------------------------------------------------------ |
-| Implementing de Boer (2000) | Available [here](code/html-exports/1_implementing_de_boer_2000.html) |
+| Title                                                    | Location                                                     |
+| -------------------------------------------------------- | ------------------------------------------------------------ |
+| Implementing de Boer (2000)                              | Available [here](code/html-exports/1_implementing_de_boer_2000.html) |
+| Reacreating de Boer (2000)                               | Available [here](code/html-exports/2_recreating_de_boer_2000.html) |
+| Recreating de Boer with alternative Bark Operator (2000) | Available [here](code/html-exports/3_alternative_bark_experiments.html) |
 
 
 
