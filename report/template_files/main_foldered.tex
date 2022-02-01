@@ -1,0 +1,91 @@
+\documentclass[oneside]{book}
+
+% Load the VUB package.
+% This has many options, please read the documentation at
+% https://gitlab.com/rubdos/texlive-vub
+\usepackage{vub}
+
+%href package to make references clickable.
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+% Better math equations
+\usepackage{amsmath}
+
+% Some highly suggested packages, please read their manuals.
+\usepackage{cleveref}
+\usepackage[natbib,style=apa]{biblatex}
+\addbibresource{../bibliography.bib}
+\usepackage{listings}
+\usepackage{wrapfig}
+
+
+%smaller spacing
+\usepackage{titlesec}
+\titlespacing*\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing*\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing*\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+%space between paragraph and indent all
+\setlength{\parskip}{1em}
+%\usepackage{indentfirst}
+
+% algorithms
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+
+%quotes
+\usepackage{epigraph}
+
+%space between bib entries
+\setlength\bibitemsep{2\itemsep}
+
+%images settings
+\graphicspath{ {./images/} }
+\usepackage{graphicx,caption}
+\usepackage{float}
+\usepackage{rotating}
+\usepackage{tikz}
+
+% subfigures
+\usepackage{subcaption}
+
+% remove chapter text
+\usepackage{titlesec}
+
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{}{0pt}{\Huge}
+\titlespacing*{\chapter}
+  {0pt}{0pt}{15pt}
+
+%START title
+\input{parts/1_title}
+\begin{document}
+\frontmatter
+\maketitle
+%END title
+
+
+%TOC
+\tableofcontents
+\mainmatter
+
+%START MAIN
+\input{parts/2_defence}
+\input{parts/3_literature}
+\input{parts/4_reimplementing_de_boer}
+\input{parts/5_extensions}
+\input{parts/6_results}
+\input{parts/7_discussion}
+\input{parts/Z_figures}
+
+%references list
+\nocite{*}
+\printbibliography[heading=bibintoc, title={References}]
+\end{document}

@@ -2,6 +2,8 @@
 
 This repository includes installation instructions, source code, extra documents and more by Lennert Bontinck for the EoS project.
 
+The report for this project can be found [here](lennert_BONTINCK_EvoSpeech_Report.pdf).
+
 
 
 ## Table of contents
@@ -45,7 +47,7 @@ The project was made on a MacBook Pro running macOS Monterey. Install instructio
 
 ### Sample output
 
-Sample output in the form of figures created by the code are also provided here. These are the figures also used in the report.
+Sample output in the form of figures created by the code are also provided here. Some of these are also used in the report.
 
 | Title                                                    | Documentation                                                |
 | :------------------------------------------------------- | ------------------------------------------------------------ |
