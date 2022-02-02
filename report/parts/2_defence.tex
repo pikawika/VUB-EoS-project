@@ -11,7 +11,7 @@ The exact project goal and an overview of the supplied code are given in further
 
 \section{Project goal}
 \label{sec:general_remarks_why}
-As the ABM related papers were found most interesting, it was chosen to re-implement and extend the paper on self-organization in vowel systems by \citet{deBoer2000} for this project.
+It was chosen to re-implement and extend the paper on self-organization in vowel systems by \citet{deBoer2000} for this project.
 Whilst the original C++ source code of \citet{deBoer2000} was provided to us, his students, it was dated and not so well documented.
 This was to be expected as the code was not originally meant for distribution.
 To further ground our understanding of the paper and make extensions on this work easier, we have chosen to do a re-implementation in Python.
@@ -22,15 +22,14 @@ We also addressed some of the \textit{ad hoc} decisions in the original version.
 To be more precise, this report provides an alternative way of converting to the bark scale and determining the effective second formant of a produced sound.
 This was found to not influence the results, as is further discussed in \ref{sec:reimplementing_better}.
 
-As computer science students, we know how important the used network structure is to models and ABMs in specific.
 In the original version of the imitation game proposed by \citet{deBoer2000}, agent pairs are picked at random.
 Whilst this is an understandable simplification for his work, it made us wonder if the findings hold for more complex structures.
 Initially, it was considered to use scale-free networks, as we thought this would better represent a human network.
-However, the actual realism of scale-free networks is debated and one of our colleagues wanted to go this route already \citep{scalefree}.
+However, the actual realism of scale-free networks is debated and one of our colleagues wanted to go this route already \citep{scalefreebad}.
 Because of this, we opted to model a small community consisting of agents with different roles and influences.
-These agents also die and get replaced by new agents.
-It is thus more dynamic and varying than the setting used by \citet{deBoer2000} and will test the original hypothesis of his paper further.
-This hypothesis is: "The structure of vowel systems is determined by self-organization in a population under constraints of perception and production." - \citet{deBoer2000}.
+These agents and their roles evolve over time to eventually be replaced with new agents.
+It is thus a more dynamic and varying setting than the one used by \citet{deBoer2000}.
+This is done to further ground the initial hypothesis by de Boer, namely: "The structure of vowel systems is determined by self-organization in a population under constraints of perception and production." - \citet{deBoer2000}.
 
 %------------------------------------
 \section{Important files}
@@ -55,7 +54,8 @@ An overview of the most important files is given below:
         \item \texttt{imitationGameClasses.py}: all classes needed to play imitation games as specified by \citet{deBoer2000}.
         \item \texttt{2\_recreating\_de\_boer\_2000.ipynb}: step by step re-collection of results by \citet{deBoer2000}.
         \item \texttt{3\_alternative\_bark\_experiments.ipynb}: step by step re-collection of results by \citet{deBoer2000} using a less ad hoc variant of the bark converter and effective second formant weighting function.
-        \item TODO TODO TODO TODO TODO TODO TODO TODO
+        \item \texttt{4\_adding\_small\_communities.ipynb}: step by step implementation of the extension provided by this project.
+        \item \texttt{5\_evaluating\_small\_communities.ipynb}: evaluation of the created extension with respect to \citet{deBoer2000}.
     \end{itemize}
     \item \texttt{code/html-exports} and \texttt{documentation/installation}
     \begin{itemize}
