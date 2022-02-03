@@ -1,10 +1,5 @@
 \chapter{Re-implementing de Boer (2000)}
 \label{ch:reimplementing}
-% beter gebruik classes en doc
-% formules van ons vergelijken met die van de boer want soms anders in paper en code
-% cleaner afgaan van mogelijke shift
-% semi random add ipv random zoals gezegd
-% equal van vowels beter bespreken
 
 The original C++ source code of \citet{deBoer2000} was provided to us, de Boer's students.
 However, this code was dated and not meant for distribution, which made it difficult to be used or extended upon.
@@ -12,27 +7,27 @@ Because we saw the value in a well documented and easy to extend implementation 
 This was done incrementally, with each step described in \texttt{1\_implementing\_de\_boer\_2000.ipynb}.
 The working of the code was validated by reproducing the results of the experiments by \citet{deBoer2000} in \texttt{2\_recreating\_de\_boer\_2000.ipynb}.
 This chapter will summarise the development and findings of these two Jupyter notebooks.
-We stress that all of the discussed code in what follows is either derived from textual description in \citet{deBoer2000} or the provided C++ code.
+We stress that all of the discussed code in what follows is either derived from the textual description in \citet{deBoer2000} or the provided C++ code.
 
 %------------------------------------
 
 \section{Producing sounds}
 \label{sec:reimplementing_producing}
 
-\citet{deBoer2000} system consists of agents who can produce, perceive, and remember speech sounds in a human-like way.
+The ABM of \citet{deBoer2000} consists of agents who can produce, perceive, and remember speech sounds in a human-like way.
 The most important component for producing sounds in a human-like manner is the articulatory synthesizer.
-This synthesizer takes as input three vowel parameters: the tongue position ($p$), the tongue height ($h$) and the lip rounding ($r$).
+This synthesizer takes as input three parameters related to the vocal tract configuration: the tongue position ($p$), the tongue height ($h$) and the lip rounding ($r$).
+These input parameters are represented using a \texttt{Phoneme} class object.
 The outputs of the synthesizer are the first four formant frequencies of the corresponding vowel: $F_1$ to $F_4$ expressed in $Hz$.
-The conversion between input and output happens based on the synthesizer equations given by \citet{deBoer2000}, table 2.
+This output is represented as a \texttt{Utterance} class object.
+The conversion between input and output happens based on equations given by \citet{deBoer2000}, table 2.
+A small typo in the provided calculation for $F_3$ has been corrected in our code.
 \Citet{deBoer2000} used interpolation from known data to create these equations.
 We used these known points for validating our $F_1$ to $F_4$ conversions from the $p$, $h$ and $r$ input and found them to match perfectly with the given data.
+It is noted that the interpolated approach of \citet{deBoer2000} makes the synthesising process faster than a full vocal synthesizer system but forms a clear simplification.
 
-From the above-described synthesizer equations, we can make the \texttt{Synthesizer} class.
-To represent input and output formally, we make use of two helper classes: \texttt{Utterance} and \texttt{Phoneme}.
-The former stores an utterance consisting of the four formants $F_1$ to $F_4$.
-This is the output of the \texttt{synthesise} function.
-A phoneme is used as input for the same function and stores the $p$, $h$ and $r$ parameters.
-Two types of noise can be assigned to a \texttt{Synthesizer} object.
+The above-discussed process is implemented in the \texttt{Synthesizer} class.
+A synthesizer is initialised by providing two types of noise.
 The \texttt{max\_noise\_agent} and the \texttt{max\_noise\_ambient}.
 The agent noise is applied to the phoneme before utterance creation (Equation \ref{eq:reimplementing_noise_agent}), the ambient noise is applied to the utterance after creation.
 The applied noise, $\lambda$, is uniformly picked from: $\frac{-\psi}{2} \leq \lambda \leq \frac{\psi}{2}$, with $\psi$ being the provided parameter.
@@ -62,12 +57,34 @@ It represents frequencies in a manner that is closer to human perception.
 It goes from the four formant representation in Hertz to a two formant representation in Bark consisting of the first formant and the \textit{effective second-formant} ($F'_2$).
 
 We took the conversion formulae and calculation formula for the effective second formant straight from \citet{deBoer2000}.
-The conversion from Hertz to Bark and back used by \citet{deBoer2000} is again interpolated from data.
-It is also admitted by \citet{deBoer2000} that his calculations for determining ($F'_2$) are a bit ad hoc.
-The critical distance used for calculating ($F'_2$) can be provided as an optional argument.
-Because of the interpolated conversion and ad hoc ($F'_2$) calculations, we have also foreseen an \texttt{alternative\_bark\_conversion} parameter.
+The conversion from Hertz to Bark and back used by \citet{deBoer2000} is again interpolated from data and given in Equation \ref{eq:bark_conversion_de_boer}.
+It is also admitted by \citet{deBoer2000} that his calculations for determining $F'_2$ are a bit ad hoc.
+The used equations are given in Equation \ref{eq:f2_conversion_de_boer}.
+The fourth case for determining $F'_2$ has been changed from \citet{deBoer2000} to reflect the effective equation used in the available code.
+The critical distance ($c$) used for calculating $F'_2$ can be provided as an optional argument of the class instance but is set to 3.5 for all experiments.
+Because of the interpolated conversion and ad hoc $F'_2$ calculations, we have also foreseen an \texttt{alternative\_bark\_conversion} parameter.
 If set to \texttt{True}, the Bark operator will use alternative methods for both of these functions.
-This is further discussed in section \ref{sec:reimplementing_better}.
+This is further discussed in chapter \ref{ch:improving_de_boer}.
+
+\begin{equation}
+  Bark =
+    \begin{cases}
+      \frac{ln(Hertz/271.32)}{0.1719} + 2 & Hz > 271.32\\
+      \frac{Hertz - 51}{110}  & Hz \leq 271.32
+    \end{cases} 
+\label{eq:bark_conversion_de_boer}      
+\end{equation}
+
+\begin{equation}
+  F'_2 =
+    \begin{cases}
+      F_2 & F_3 - F_2 > c \\
+      \frac{(2-w_1) F_2 + w_1 F_3}{2} & F_3 - F_2 \leq c \text{ and } F_4 - F_2 > c \\
+      \frac{w_2 F_2 + (2-w_2) F_3}{2} - 1 & F_4 - F_2 \leq c \text{ and } F_3 - F_2 < F_4 - F_3 \\
+      \frac{(2-w_2) F_3 + w_2 F_4}{2} - 1 & F_4 - F_2 \leq c \text{ and } F_3 - F_2 \geq F_4 - F_3
+    \end{cases} 
+\label{eq:f2_conversion_de_boer}      
+\end{equation}
 
 Having our Bark space configured, we can implement a distance measure between utterances as specified in Equation \ref{eq:reimplementing_distance}.
 This distance measure can be used as a way for the agent to determine the closest sound in his repertoire to the one it heard.
@@ -97,9 +114,9 @@ The utterance of this sound is determined by synthesising the provided phoneme i
 To discuss the functions of an agent, it is easiest to present a typical imitation game flow.
 Algorithm \ref{alg:say_something} shows the actions performed by a randomly picked agent who starts an imitation game.
 If the agent known sound repertoire is empty a completely random vowel is inserted by picking random values between $0$ and $1$ for the Phoneme parameters.
-A different randomly picked agent plays the role of imitator and response to the heard utterance using the process shown in Algorithm \ref{alg:imitate_sound}.
+A different randomly picked agent plays the role of imitator and responds to the heard utterance using the process shown in Algorithm \ref{alg:imitate_sound}.
 If the imitator's known sounds repertoire is empty, it will add a \textit{similar sound} to the one it heard.
-It does this by checking eight \textit{corner} sounds it can produce and picking the one which is closest in distance.
+It does this by checking eight \textit{corner} sounds it can produce and pick the one which is closest in distance to the heard one.
 Afterwards it improves this sound further by using its \texttt{improve\_sound} function for the agent specific amount of times (\texttt{max\_similar\_sound\_loops} parameter).
 The \texttt{improve\_sound} function tries all possible permutation's of the phoneme parameters by either keeping the value or adding/substracting the agent specific step size (\texttt{phoneme\_step\_size} parameter).
 
@@ -132,7 +149,7 @@ The \texttt{improve\_sound} function tries all possible permutation's of the pho
 \EndIf
 
 \State Remember $U_{in}$
-\State Find closest known sounds $S$ to heard utterance
+\State Find closest known sounds $S$ to $U_{in}$
 \State Update usage count of $S$
 \State Remember chose of $S$
 \State Return utterance of $S$ using own bark operator
@@ -150,15 +167,15 @@ He also communicates this to the imitating agent in a non-verbal manner.
 He updates the success count accordingly and prepares himself for the next round.
 The process of preparing for a new round is given in Algorithm \ref{alg:prepare_new}.
 This consists of resetting the game variables such as the $last\_spoken\_sound$ variable.
-The agent then updates its count of games played, ads well as the success and imitator/initiator count respectively.
+The agent then updates its count of games played, together with the success and imitator/initiator count.
 Based on the agent specific \texttt{cleanup\_prob}, \texttt{new\_sound\_prob} and \texttt{merge\_prob} the agent will potentially remove bad sounds, add a semi-random new sound or merge similar sounds.
-A sound is thus removed periodically if it's success rate is below the agent specific \texttt{sound\_threshold\_agent} and used at least \texttt{sound\_minimum\_tries}, which is also agent specific.
-A sound is also added semi-randomly on a periodic basis.
-We call this process semi-random as multiple random vowels will be tried based on the agent specific \texttt{max\_semi\_random\_loop}, and the sound that had the greatest summed distance will be used as new sound.
-Finally, similar sounds are also merged on a periodic basis.
+A sound is thus removed periodically if its success rate is below the agent specific \texttt{sound\_threshold\_agent} and used at least \texttt{sound\_minimum\_tries}, which is also agent-specific.
+A sound is also added semi-randomly periodically.
+We call this process semi-random as multiple random vowels will be tried based on the agent specific \texttt{max\_semi\_random\_loop}, and the sound that had the greatest summed distance will be used as the new sound.
+Finally, similar sounds are also merged periodically.
 The agent does this by validating if both the utterance or phonemes don't lie too close.
-Phonemes lie too close if their parameters differ less then 0.17 in total.
-Utterance are too close if they can't be distinguished taking into account the noise of the environment.
+Phonemes lie too close if their parameters differ less than 0.17 in total.
+Utterances are too close if they can't be distinguished taking into account the noise of the environment.
 Both of these calculations are taken from the code provided by \citet{deBoer2000}.
 
 
@@ -200,9 +217,9 @@ Both of these calculations are taken from the code provided by \citet{deBoer2000
     \State Update agent initiator count
 \EndIf
 
-\State Remove bad sounds per agent specific odd
-\State Merge similar sounds per agent specific odd
-\State Add semi-random sound per agent specific odd
+\State Remove bad sounds per agent-specific odd
+\State Merge similar sounds per agent-specific odd
+\State Add semi-random sound per agent-specific odd
 
 \State Reset game variables
 
@@ -212,10 +229,10 @@ Both of these calculations are taken from the code provided by \citet{deBoer2000
 %-----------------------------------------------------
 \newpage
 To end a game cycle, the imitator agent will process the non-verbal imitation success communication.
-It does using the process described in Algorithm \ref{alg:non_verbal}.
+It does this using the process described in Algorithm \ref{alg:non_verbal}.
 If the imitation was successful the agent will use the previously described \texttt{improve\_sound} function once to make the spoken sound better match the heard utterance.
-If the imitation was not successful and the used sound has a success ratio lower then the agent specific \texttt{sound\_threshold\_game}, the sound is also improved as described before.
-However, if the success ratio of the sound is above this threshold it is assumed that the spoken sound is a correct imitation of other sounds in the network and thus a similar sound is added to the one heard as reaction.
+If the imitation was not successful and the used sound has a success ratio lower than the agent specific \texttt{sound\_threshold\_game}, the sound is also improved as described before.
+However, if the success ratio of the sound is above this threshold it is assumed that the spoken sound is a correct imitation of other sounds in the network and thus a similar sound is added to the one heard as a reaction.
 The process of adding this similar sound is identical as described when the sound repertoire of an imitator was empty.
 
 
@@ -228,16 +245,16 @@ The process of adding this similar sound is identical as described when the soun
 \State Update agent games count
 \If{$success$}
     \State Update agent success count
-    \State Improve used sound to better match heard utterance
+    \State Improve used sound to better match the heard utterance
 \ElsIf{Low success ratio of spoken sound}
-    \State Improve used sound to better match heard utterance
+    \State Improve used sound to better match the heard utterance
 \Else
     \State Add a similar sound to the heard utterance
 \EndIf
 
-\State Remove bad sounds per agent specific odd
-\State Merge similar sounds per agent specific odd
-\State Add semi-random sound per agent specific odd
+\State Remove bad sounds per agent-specific odd
+\State Merge similar sounds per agent-specific odd
+\State Add semi-random sound per agent-specific odd
 
 \State Reset game variables
 
@@ -247,14 +264,17 @@ The process of adding this similar sound is identical as described when the soun
 %------------------------------------
 \section{Playing and analysing games}
 \label{sec:reimplementing_game_engine}
-% Game engine en Game State kort beschrijven 
-TODO
 
-%------------------------------------
+To play the imitation game for a specified amount of iterations and to store the results, two additional classes were made.
+The \texttt{GameState} class stores a copy of the agents at a certain point and the iteration number at which the copy was made.
+It also has a plot function to plot the sound repertoires of agents, grouped per agent.
+The \texttt{GameEngine} contains a simple loop to play imitation games for a specified amount of iterations.
+The \texttt{play\_imitation\_game} function returns a list of \texttt{GameState} objects at the specified \texttt{checkpoints} (iteration numbers) by playing the imitation games.
 
-\section{Improving de Boer (2000)}
-\label{sec:reimplementing_better}
-% BV die dingen dat ad-hoc waren en jij beter gemaakt hebt 
-% andere bark gebruikt (conversion en effective second formant)
-% Mss betere weighting factors bezien
-TODO
+To make evaluating the obtained \texttt{GameState} objects, and thus experiment results, easier, a \texttt{Statistics} class is created.
+It allows for easy calculation of the average and standard deviation for \textit{energy}, sound repertoire \textit{size}, and \textit{success rates} of agents.
+These results can also easily be plotted by the provided functions.
+To compare the emerged sound systems with real human vowel systems, a function \texttt{plot\_known\_vowels\_over\_sounds} is provided.
+This plots the known vowels used to derive the interpolated synthesizer function on top of a plot from the agents' vowel repertoires.
+
+The data and plots obtainable from these classes are used in chapter \ref{ch:results} to discuss the results.

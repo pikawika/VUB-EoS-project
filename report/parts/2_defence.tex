@@ -20,7 +20,7 @@ This enables readers to not only easily reproduce the results of \citet{deBoer20
 The latter was something we felt was lacking and feel is an important contribution of this work.
 We also addressed some of the \textit{ad hoc} decisions in the original version.
 To be more precise, this report provides an alternative way of converting to the bark scale and determining the effective second formant of a produced sound.
-This was found to not influence the results, as is further discussed in \ref{sec:reimplementing_better}.
+This was found to not influence the results, as is further discussed in chapter \ref{ch:improving_de_boer}.
 
 In the original version of the imitation game proposed by \citet{deBoer2000}, agent pairs are picked at random.
 Whilst this is an understandable simplification for his work, it made us wonder if the findings hold for more complex structures.
@@ -54,8 +54,9 @@ An overview of the most important files is given below:
         \item \texttt{imitationGameClasses.py}: all classes needed to play imitation games as specified by \citet{deBoer2000}.
         \item \texttt{2\_recreating\_de\_boer\_2000.ipynb}: step by step re-collection of results by \citet{deBoer2000}.
         \item \texttt{3\_alternative\_bark\_experiments.ipynb}: step by step re-collection of results by \citet{deBoer2000} using a less ad hoc variant of the bark converter and effective second formant weighting function.
-        \item \texttt{4\_adding\_small\_communities.ipynb}: step by step implementation of the extension provided by this project.
-        \item \texttt{5\_evaluating\_small\_communities.ipynb}: evaluation of the created extension with respect to \citet{deBoer2000}.
+        \item \texttt{4\_adding\_small\_communities.ipynb}: step by step implementation of the community based imitation games (extension).
+        \item \texttt{communityImitationGameClasses.py}: all classes needed to play the community based imitation games.
+        \item \texttt{5\_evaluating\_small\_communities.ipynb}: evaluation of the community based imitation games.
     \end{itemize}
     \item \texttt{code/html-exports} and \texttt{documentation/installation}
     \begin{itemize}
