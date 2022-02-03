@@ -108,6 +108,12 @@ class CommunityAgent(Agent):
         # Store community behaviour
         self.community_behaviour = new_behaviour;
         
+        # Update synthesizer
+        self.synthesizer = new_behaviour.synthesizer;
+        
+        # Update step size
+        self.phoneme_step_size = new_behaviour.phoneme_step_size;
+        
         if self.logger:
             print(f"{self.name}: update my role and behaviour to reflect {new_role.name}.");
 
