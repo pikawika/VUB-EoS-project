@@ -54,6 +54,8 @@ Sample output in the form of figures created by the code are also provided here.
 | Figures for implementing de Boer (2000) notebook         | Available [here](code-output/1-implemeting_de_boer/)         |
 | Figures for recreating de Boer (2000) notebook           | Available [here](code-output/2-recreating_de_boer_2000/)     |
 | Recreating de Boer with alternative Bark Operator (2000) | Available [here](code-output/3-alternative_bark_experiments/) |
+| Adding small communities to de Boer (2000)               | Available [here](code-output/4-adding_small_communities/)    |
+| Evaluating small community imitation games               | Available [here](code-output/5-evaluating_small_communities/) |
 
 
 <hr>
@@ -72,6 +74,8 @@ The code for the project is provided in the form of Jupyter notebooks, which can
 | Implementing de Boer (2000)                              | Available [here](code/notebooks/1_implementing_de_boer_2000.ipynb) |
 | Reacreating de Boer (2000)                               | Available [here](code/notebooks/2_recreating_de_boer_2000.ipynb) |
 | Recreating de Boer with alternative Bark Operator (2000) | Available [here](code/notebooks/3_alternative_bark_experiments.ipynb) |
+| Adding small communities to de Boer (2000)               | Available [here](code/notebooks/4_adding_small_communities.ipynb) |
+| Evaluating small community imitation games               | Available [here](code/notebooks/5_evaluating_small_communities.ipynb) |
 
 
 
@@ -84,6 +88,8 @@ To view the notebooks without a conda environment a HTML export is provided whic
 | Implementing de Boer (2000)                              | Available [here](code/html-exports/1_implementing_de_boer_2000.html) |
 | Reacreating de Boer (2000)                               | Available [here](code/html-exports/2_recreating_de_boer_2000.html) |
 | Recreating de Boer with alternative Bark Operator (2000) | Available [here](code/html-exports/3_alternative_bark_experiments.html) |
+| Adding small communities to de Boer (2000)               | Available [here](code/html-exports/4_adding_small_communities.html) |
+| Evaluating small community imitation games               | Available [here](code/html-exports/5_evaluating_small_communities.html) |
 
 
 
@@ -91,9 +97,10 @@ To view the notebooks without a conda environment a HTML export is provided whic
 
 We also provide some plain python files to easily import previously created functions and/or classes
 
-| Title                                 | Location                                                 |
-| ------------------------------------- | -------------------------------------------------------- |
-| Classes needed to play imitation game | Available [here](code/notebooks/imitationGameClasses.py) |
+| Title                                                 | Location                                                     |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| Classes needed to play imitation game                 | Available [here](code/notebooks/imitationGameClasses.py)     |
+| Classes needed to play community based imitation game | Available [here](code/notebooks/communityImitationGameClasses.py) |
 
 
 * * *
