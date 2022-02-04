@@ -1,11 +1,27 @@
 \chapter{Discussion}
 \label{ch:discussion}
 
-TODO
+In this report, we discussed the re-implementation and extension of an agent-based model proposed by \citet{deBoer2000}.
+Special care was taken during the re-implementation so that the written code is well documented, easily extendable and publicly available under the GPL V3 license \citep{gplv3, github_project}.
+The re-implemented code validated the results found by \citet{deBoer2000}, with almost exact results for all experiments except for the average success rate of agents.
+However, the difference in this success rate is minor and of no significant importance.
+This leaves us confident that both the results by \citet{deBoer2000} and our developed code are legitimate.
 
-%------------------------------------
+Whilst the work by \citet{deBoer2000} is great in many aspects, especially considering the time when it was written, some ad hoc decisions and inconsistencies were found.
+To test if those ad hoc decisions and inconsistencies in equations don't form an issue, we provided an alternative bark scale conversion algorithm as well as an alternative effective second formant calculation.
+We tested the system using this alternative bark operator and validated the results found by \citet{deBoer2000} to still hold.
+However, the alternative bark operator did cause a statistically significant lower average vowel system size.
+But, this result was to be expected as the alternative bark operator has a less reachable area in the acoustic space and thus less effective space for vowels to be stored.
 
-\section{TODO}
-\label{sec:discussion_XXX}
+As we laid a major focus on the re-implementation of the code proposed by \citet{deBoer2000} and claimed it to be easily extendable, we performed such an extension.
+This consisted of changing the used selection strategy of agents from a random-like network to a small-community-like network.
+This network consisted of agents with different roles and influences in the community.
+Due to limited resources, it was only possible to perform a preliminary pilot study on the influence of this network on the system proposed by \citet{deBoer2000}.
+However, the found results are promising in two regards.
+First, they still seem to defend the results found by \citet{deBoer2000}.
+More interestingly, they seem to hint that the network structure can give rise to vowel systems of different accuracy and size between the different roles in the community.
+Further research is needed to validate this finding, but it could be a step towards an explanation for inter-community variation in vowel systems.
 
-TODO
+We like to end this report by thanking Bart de Boer for not only the interesting lectures but also the opportunity to develop a system in the field of evolution of speech.
+Not only did we better understand the papers discussed in the lectures, but we also learned to implement agent-based models ourselves.
+We hope that future students might find this report helpful and they can extend upon the code provided with this report.
